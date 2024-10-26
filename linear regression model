@@ -1,0 +1,46 @@
+# Required libraries
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+import joblib
+
+# Hypothetical dataset (assuming we have columns related to accident data)
+data = pd.DataFrame({
+    'Weather_Condition': [1, 2, 1, 1, 3], # 1: Clear, 2: Rainy, 3: Foggy
+    'Road_Surface_Condition': [1, 2, 1, 1, 3], # 1: Dry, 2: Wet, 3: Icy
+    'Time_of_Accident': [12, 18, 9, 22, 14], # in hours
+    'Vehicle_Speed': [45, 60, 35, 80, 50], # in mph
+    'Driver_Age': [25, 40, 18, 35, 30], # in years
+    'Road_Type': [1, 2, 1, 2, 1], # 1: Urban, 2: Highway
+    'Light_Condition': [1, 1, 2, 3, 2], # 1: Daylight, 2: Dark, 3: Dawn/Dusk
+    'Alcohol_Involvement': [0, 1, 0, 1, 0], # 0: No, 1: Yes
+    'Number_of_Vehicles': [1, 2, 1, 2, 1],
+    'Accident_Severity': [2, 5, 3, 7, 4] # Severity on a scale from 1 to 10
+})
+
+# Independent variables (features)
+X = data.drop('Accident_Severity', axis=1)
+
+# Dependent variable (target)
+y = data['Accident_Severity']
+
+# Split dataset into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Initialize the Linear Regression model
+model = LinearRegression()
+
+# Train the model
+model.fit(X_train, y_train)
+
+# Save the model
+model_filename = '/mnt/data/accident_severity_model.pkl'
+joblib.dump(model, model_filename)
+
+# Example prediction for a hypothetical set of independent variables
+hypothetical_data = np.array([[1, 1, 10, 40, 30, 1, 2, 0, 1]]) # Corresponds to a clear day, dry road, etc.
+prediction = model.predict(hypothetical_data)
+
+# Return the prediction and model file location
+prediction, model_filename
